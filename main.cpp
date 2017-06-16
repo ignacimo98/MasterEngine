@@ -3,7 +3,7 @@
 
 
 int main() {
-    ConnectionManager* myConnectionManager = new ConnectionManager();
+    //ConnectionManager* myConnectionManager = new ConnectionManager();
 
     return 0;
 }
