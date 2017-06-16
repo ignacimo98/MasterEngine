@@ -32,8 +32,9 @@ public:
     ConnectionManager();
     void waitForConnections();
     void waitForMessage();
-    void readFirstJSON();
     void readJSON();
+    bool isDisk(int fd);
+    bool isClient(int fd);
 
 
 private:

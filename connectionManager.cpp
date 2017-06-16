@@ -195,11 +195,10 @@ ConnectionManager::ConnectionManager() {
                 {
                     //set the string terminating NULL byte on the end
                     //of the data read
-                    buffer[valread-2] = '\0';
+                    buffer[valread] = '\0';
                     std::ofstream jsonFile("myFile.json");
                     jsonFile << buffer;
                     jsonFile.close();
-                    std::cout << 1 << std::endl;
                     readJSON();
                     send(sd , buffer , strlen(buffer) , 0 );
                 }
@@ -213,7 +212,6 @@ ConnectionManager::ConnectionManager() {
 
 void ConnectionManager::readJSON() {
     std::ifstream jsonFile("myFile.json");
-    std::cout << 1 << std::endl;
     json j;
     jsonFile >> j;
     jsonFile.close();
@@ -290,4 +288,22 @@ void ConnectionManager::readJSON() {
 
 
 }
+
+bool ConnectionManager::isClient(int fd) {
+    for (i = 0; i < maxClients; i++){
+        if (clientSockets[i] == fd)
+            return true;
+    }
+    return false;
+}
+
+bool ConnectionManager::isDisk(int fd) {
+    for (i = 0; i < maxDisks; i++){
+        if (diskSockets[i] == fd)
+            return true;
+    }
+    return false;
+}
+
+
 
