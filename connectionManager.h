@@ -16,17 +16,40 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
+#include <thread>
+#include "JSON library/json.hpp"
 
 #define TRUE   1
 #define FALSE  0
 #define PORT 8888
+#define MAX_SIZE 100000000000000000
+
+using json = nlohmann::json;
+
 
 class ConnectionManager {
 public:
     ConnectionManager();
+    void waitForConnections();
+    void waitForMessage();
+    void readFirstJSON();
+    void readJSON();
 
 
+private:
 
+    int opt = TRUE;
+    int master_socket , addrlen , new_socket , allSockets[45] ,
+            maxSockets = 45 , activity, i , valread , sd, counter = 0,
+            diskSockets[15], maxDisks = 15, queryExecutorSocket = 0,
+            clientSockets[30], maxClients = 30;
+    int max_sd;
+    struct sockaddr_in address;
+
+    char buffer[1025];  //data buffer of 1K
+
+    //set of socket descriptors
+    fd_set readfds;
 
 };
 
