@@ -1,7 +1,7 @@
 #include "tableutils.h"
 
-Table extractTemplate(Table table){
-    //Table TableUtils::extractTemplate(Table table){
+//Table extractTemplate(Table table){
+Table TableUtils::extractTemplate(Table table){
     Table result;
     result.setName(table.getName());
     result.setPrimaryKey(table.getPrimaryKey());

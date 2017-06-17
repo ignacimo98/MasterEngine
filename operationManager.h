@@ -12,6 +12,7 @@
 #include "JSON library/json.hpp"
 #include "where.h"
 #include "join.h"
+#include "tableutils.h"
 using json = nlohmann::json;
 
 class OperationManager{
