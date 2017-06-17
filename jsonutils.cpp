@@ -52,3 +52,64 @@ Table JSONutils::jsonToTable(json inputJson)
 
 }
 
+/*
+{
+    "command": "execute",
+    "type": "select",
+    "what": ["id ", "cedula", "*"],
+    "from": "estudiantes",
+    "where": {
+        "cmd": "AND",
+        "comparators": [{
+            "table": "estudiantes",
+            "column": "id",
+            "operator": "=",
+            "value": 5
+        }, {
+            "table": "estudiantes",
+            "column": "cedula",
+            "operator": "=",
+            "value": 2000222
+        }]
+    },
+    "join": {
+        "externalTable": "cursos",
+        "externalColumn": "idest",
+        "internalColumn": "id"
+    }
+
+}
+ */
+
+
+Where JSONutils::jsonToWhere(json inputJson)
+{
+    Where result;
+    result.setCondition(inputJson["cmd"]);
+    std::vector<Comparator> compV;
+    for(const auto &comparator : inputJson["comparators"]){
+        compV.push_back(jsonToComparator(comparator));
+    }
+    result.setComparators(compV);
+    return result;
+
+}
+
+Join JSONutils::jsonToJoin(json inputJson)
+{
+    Join result;
+    result.setExternalColumn(inputJson["externalColumn"]);
+    result.setExternalTable(inputJson["externalTable"]);
+    result.setInternalColumn(inputJson["internalColumn"]);
+    return result;
+}
+
+Comparator JSONutils::jsonToComparator(json inputJson)
+{
+    Comparator result;
+    result.setValue(inputJson["value"]);
+    result.setColumnName(inputJson["column"]);
+    result.setOperatorType(inputJson["operator"]);
+    result.setTableName(inputJson["table"]);
+    return result;
+}

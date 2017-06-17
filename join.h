@@ -9,6 +9,7 @@
 
 class Join{
 public:
+    Join();
     Join(std::string externalTable, std::string externalColumn, std::string internalColumn);
 
     std::string getExternalTable() const;
