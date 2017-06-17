@@ -12,6 +12,8 @@ Table lessThan(Table table, std::string columnName, std::string value);
 Table greaterThan(Table table, std::string columnName, std::string value);
 Table subTable(Table table, std::vector<std::string> columnsNames =  std::vector<std::string>(), std::vector<int> rowsIndexes = std::vector<int>());
 Table extractTemplate(Table table);
+Table updateRows(Table tableToUpdate, Table newData);
+Table updateColumns(Table table, std::vector<std::string> contents , std::vector<std::string> columnsNames);
 }
 
 #endif // TABLEUTILS_H

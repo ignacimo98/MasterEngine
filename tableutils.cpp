@@ -236,3 +236,32 @@ Table TableUtils::tableDifference(Table tableMain, Table tableToRemove)
     }
     return result;
 }
+
+Table TableUtils::updateRows(Table tableToUpdate, Table newData)
+{
+    int index = tableToUpdate.getPrimaryKeyIndex();
+    ///Table result = extractTemplate(table);
+    if(index != -1){
+        for(int i = 0; i < tableToUpdate.getRows().size(); ++i){
+            bool updated=false;
+            for(const Row &row:newData.getRows()){
+                if(tableToUpdate.getRows()[i].getContents()[index]==row.getContents()[index]){
+                    Row newrow = row;
+                    newrow.setIndex(i);
+                    tableToUpdate.updateRow(newrow);
+                    updated=true;
+                    break;
+                }
+            }
+        }
+    }
+    return tableToUpdate;
+}
+
+Table TableUtils::updateColumns(Table table, std::vector<std::string> contents, std::vector<std::string> columnsNames)
+{
+    for (int i = 0; i < contents.size(); ++i) {
+        table.updateColumn(columnsNames[i],contents[i]);
+    }
+    return table;
+}

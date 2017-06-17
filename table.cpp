@@ -222,6 +222,25 @@ void Table::setRows(const std::vector<Row> &value)
     rows = value;
 }
 
+bool Table::updateColumn(std::string name, std::string value)
+{
+    bool result = false;
+    int index = getColumnIndex(name);
+    if(index == -1){
+        updateColumn(index, value);
+        result = true;
+    }
+    return result;
+}
+
+bool Table::updateColumn(int index, std::string value)
+{
+    for (int i = 0; i < rows.size(); ++i) {
+        rows[i].contents[index]=value;
+    }
+    return true;
+}
+
 
 
 ColumnProperties::ColumnProperties(std::string name, int type)

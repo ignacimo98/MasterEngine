@@ -85,7 +85,9 @@ Table applyWhere(Table table, Where where){
 
 Table OperationManager::selectAux(std::string tableName, std::vector<std::string> columns, Where whereObject){
     Table table = tables->getTable(tableName);
-    Table result = TableUtils::subTable(table, columns);
+    //Table result = TableUtils::extractTemplate(table);
+    Table result = applyWhere(table, whereObject);
+    result = TableUtils::subTable(result, columns);
     //whereObject.
     return result;
 }
