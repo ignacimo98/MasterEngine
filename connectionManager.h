@@ -18,6 +18,8 @@
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
 #include <thread>
 #include "JSON library/json.hpp"
+#include "tableManager.h"
+#include "jsonUtils.h"
 
 #define TRUE   1
 #define FALSE  0
@@ -35,6 +37,7 @@ public:
     void readJSON();
     bool isDisk(int fd);
     bool isClient(int fd);
+    TableManager* tables;
 
 
 private:
