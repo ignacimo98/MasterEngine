@@ -75,9 +75,10 @@ public:
     std::string getPrimaryKey() const;
     void setPrimaryKey(const std::string &value);
     int getPrimaryKeyIndex();
-    void setRows(const std::vector<Row> &value);
     int getColumnIndex(std::string name);
     //void setRows(const std::vector<Row, std::allocator<Row>> &value);
+    void setRows(const std::vector<Row> &value);
+
 private:
     std::vector<Row> rows;
     std::string name;
