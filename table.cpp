@@ -217,6 +217,11 @@ int Table::getColumnIndex(std::string name)
     return result;
 }
 
+void Table::setRows(const std::vector<Row> &value)
+{
+    rows = value;
+}
+
 
 
 ColumnProperties::ColumnProperties(std::string name, int type)

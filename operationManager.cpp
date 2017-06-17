@@ -31,19 +31,19 @@ Table OperationManager::select(json json){
     }
     //join sin where
     else if(json["where"] == "" && json["join"] != "") {
-        Join joinObject(json["join"]);
-        selectAux(json["from"], json["what"], joinObject);
+        //Join joinObject(json["join"]);
+        //selectAux(json["from"], json["what"], joinObject);
     }
     //where sin join
     else if(json["where"] != "" && json["join"] == ""){
-        Where whereObject(json["where"]);
-        selectAux(json["from"], json["what"], whereObject);
+        //Where whereObject(json["where"]);
+        //selectAux(json["from"], json["what"], whereObject);
     }
     //where con join
     else{
-        Where whereObject(json["where"]);
-        Join joinObject(json["join"]);
-        selectAux(json["from"], json["what"], whereObject, joinObject);
+        //Where whereObject(json["where"]);
+        //Join joinObject(json["join"]);
+        //selectAux(json["from"], json["what"], whereObject, joinObject);
     }
 }
 
