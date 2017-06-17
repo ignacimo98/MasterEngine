@@ -29,6 +29,14 @@ Table selectAux(std::string tableName, std::vector<std::string> columns){
 
 resultCode OperationManager::insert(json j){
     if(tables->exists(j["name"])){
+        std::vector<std::string> toAdd;
+        for (int i = 0; i < tables->getTable(j["name"]).getTotalColumns(); i++){
+            for (int k = 0; k < j["column_names"].size(); k++){
+                if (tables->getTable(j["name"]).getColumnProperties()[i].getName() == j["column_names"][k]){
+
+                }
+            }
+        }
 
     }
     return resultCode(0,0,"");

@@ -29,6 +29,7 @@
 
 using json = nlohmann::json;
 
+class OperationManager;
 
 class ConnectionManager {
 public:
@@ -38,7 +39,7 @@ public:
     void readJSON();
     bool isDisk(int fd);
     bool isClient(int fd);
-    void insert(std::string name, std::vector<std::string> column)
+    void insert(std::string name, std::vector<std::string> column);
     TableManager* tables;
     OperationManager* operations;
 
