@@ -9,6 +9,7 @@
 ConnectionManager::ConnectionManager() {
 
     tables = new TableManager();
+    operations = new OperationManager(tables);
 
     //a message
 
@@ -306,6 +307,8 @@ void ConnectionManager::readJSON() {
         }
 
     } else if (j["command"] == "insert"){
+
+        operations->insert(j);
 
     }
 

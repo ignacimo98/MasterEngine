@@ -5,7 +5,10 @@
 #include "where.h"
 #include "join.h"
 
+OperationManager::OperationManager(TableManager *tableManager) {
+    this->tables = tableManager;
 
+}
 
 Table selectAux(std::string tableName, std::vector<std::string> columns, Where whereObject, Join joinObject){
 
@@ -23,6 +26,13 @@ Table selectAux(std::string tableName, std::vector<std::string> columns){
 
 }
 
+
+resultCode OperationManager::insert(json j){
+    if(tables->exists(j["name"])){
+
+    }
+    return resultCode(0,0,"");
+}
 
 Table OperationManager::select(json json){
     //columnas
@@ -46,5 +56,11 @@ Table OperationManager::select(json json){
         //selectAux(json["from"], json["what"], whereObject, joinObject);
     }
 }
+
+
+
+
+
+
 
 

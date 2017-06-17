@@ -8,16 +8,22 @@
 #include "table.h"
 #include "resultCode.h"
 #include "connectionManager.h"
+#include "tableManager.h"
+#include "JSON library/json.hpp"
+
+using json = nlohmann::json;
 
 class OperationManager{
 public:
-    static Table select(json json);
-    static resultCode create();
-    static resultCode update();
-    static resultCode drop();
-    static resultCode deleteT();
-    static resultCode insert();
-    static resultCode createIndex();
+    OperationManager(TableManager* tableManager);
+    Table select(json json);
+    resultCode create();
+    resultCode update();
+    resultCode drop();
+    resultCode deleteT();
+    resultCode insert(json j);
+    resultCode createIndex();
+    TableManager* tables;
 };
 
 

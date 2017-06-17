@@ -20,6 +20,7 @@
 #include "JSON library/json.hpp"
 #include "tableManager.h"
 #include "jsonUtils.h"
+#include "operationManager.h"
 
 #define TRUE   1
 #define FALSE  0
@@ -37,7 +38,9 @@ public:
     void readJSON();
     bool isDisk(int fd);
     bool isClient(int fd);
+    void insert(std::string name, std::vector<std::string> column)
     TableManager* tables;
+    OperationManager* operations;
 
 
 private:
@@ -49,6 +52,7 @@ private:
             clientSockets[30], maxClients = 30;
     int max_sd;
     struct sockaddr_in address;
+
 
     char buffer[1024*10];  //data buffer of 10K
 
