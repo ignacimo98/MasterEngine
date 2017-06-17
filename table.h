@@ -20,8 +20,9 @@ public:
     void setIndex(int value);
     std::vector<std::string> getContents() const;
     void reset();
-private:
     std::vector<std::string> contents;
+
+private:
     bool validateColumn(int index);
     int index = -1;
 };
@@ -78,6 +79,7 @@ public:
     int getColumnIndex(std::string name);
     //void setRows(const std::vector<Row, std::allocator<Row>> &value);
     void setRows(const std::vector<Row> &value);
+    bool updateColumn(std::string name, std::string value);
 
 private:
     std::vector<Row> rows;
@@ -85,6 +87,8 @@ private:
     std::string primaryKey;
     std::vector<ColumnProperties> columnProperties;
     bool checkIfColumnExists(std::string name);
+    bool updateColumn(int index, std::string value);
+
 
 
 };
