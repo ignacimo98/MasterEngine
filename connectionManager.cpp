@@ -284,6 +284,9 @@ void ConnectionManager::readJSON() {
                 break;
             }
         }
+    } else if (j["command"] == "execute"){
+        if(j["type"] == "select");
+
     }
 
 
