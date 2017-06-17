@@ -5,6 +5,25 @@
 #include "where.h"
 #include "join.h"
 
+
+
+Table selectAux(std::string tableName, std::vector<std::string> columns, Where whereObject, Join joinObject){
+
+}
+
+Table selectAux(std::string tableName, std::vector<std::string> columns, Where whereObject){
+
+}
+
+Table selectAux(std::string tableName, std::vector<std::string> columns, Join joinObject){
+
+}
+
+Table selectAux(std::string tableName, std::vector<std::string> columns){
+
+}
+
+
 Table OperationManager::select(json json){
     if(json["where"] == "" && json["join"] == "")
         selectAux(json["from"], json["what"]);
@@ -24,20 +43,4 @@ Table OperationManager::select(json json){
     }
 }
 
-
-Table selectAux(std::string tableName, std::vector<std::string> columns, Where whereObject, Join joinObject){
-    
-}
-
-Table selectAux(std::string tableName, std::vector<std::string> columns, Where whereObject){
-
-}
-
-Table selectAux(std::string tableName, std::vector<std::string> columns, Join joinObject){
-
-}
-
-Table selectAux(std::string tableName, std::vector<std::string> columns){
-
-}
 
