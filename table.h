@@ -74,6 +74,8 @@ public:
     std::string getPrimaryKey() const;
     void setPrimaryKey(const std::string &value);
     int getPrimaryKeyIndex();
+    void setRows(const std::vector<Row> &value);
+
 private:
     std::string name;
     std::string primaryKey;
