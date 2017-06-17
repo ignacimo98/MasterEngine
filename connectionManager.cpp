@@ -381,7 +381,7 @@ void ConnectionManager::readJSON() {
     else if(j["command"] == "delete"){
         resultCode code = operations->deleteT(j);
         if (code.getCodeNumber() == 1){
-            json toDisk = JSONutils::tableToJson(tables->getTable(j["from"]));
+            json toDisk = JSONutils::tableToJson(tables->getTable(j["name"]));
             toDisk["command"] = "delete_table";
             std::string toDiskStr = toDisk.dump();
             for (i = 0; i < maxDisks; i++){
@@ -391,7 +391,7 @@ void ConnectionManager::readJSON() {
             }
         }
 
-        std::cout << tables->getTable(j["from"]).toString() << std::endl;
+        std::cout << tables->getTable(j["name"]).toString() << std::endl;
 
         json responseCode;
         responseCode["command"] = "responseCode";

@@ -201,6 +201,7 @@ resultCode OperationManager::insert(json j){
 
 
 resultCode OperationManager::drop(json j) {
+    std::cout<<"se esta haciendo drop\n";
     int affectedRegisters = tables->deleteTable(j["name"]);
     if (affectedRegisters > 1){
         return resultCode(1, affectedRegisters, "Operación exitosa!");
@@ -236,10 +237,10 @@ Table OperationManager::select(json inputJson){
 }
 resultCode OperationManager::deleteT(json j){
     resultCode result(404,0,"Table not found");
-    if(tables->exists(j["from"])) {
+    if(tables->exists(j["name"])) {
         if(j["where"] != "") {
             Where whereObject = JSONutils::jsonToWhere(j["where"]);
-            result = deleteAux(j["from"], whereObject);
+            result = deleteAux(j["name"], whereObject);
         }
         else{
             result = drop(j);
