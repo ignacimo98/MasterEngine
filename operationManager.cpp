@@ -82,13 +82,16 @@ Table applyComparator(Table table, Comparator comparator ){
     }
     else if (comparator.getOperatorType()== "<") {
         result = TableUtils::lessThan(table,comparator.getColumnName(), comparator.getValue());
-
     }
     else if (comparator.getOperatorType() == ">") {
        result =  TableUtils::greaterThan(table,comparator.getColumnName(), comparator.getValue());
     }
+
+    //std::cout<<"operator "<< comparator.getOperatorType()<< "    "<<comparator.getColumnName() << "\n___________________________\n"<<result.toString()<<"_______________________________________\n";
+
     return result;
 }
+
 Table applyWhere(Table table, Where where){
     Table result;
     if(where.getCondition()=="AND"){
@@ -103,6 +106,7 @@ Table applyWhere(Table table, Where where){
         for(const Comparator &comparator : where.getComparators()){
             Table subResult = applyComparator(table, comparator);
             result = TableUtils::tableUnion(result, subResult);
+            //std::cout<<"union \n____________________________________\n"<<result.toString()<<"____________________________________\n";
         }
     }
     else{
@@ -111,6 +115,8 @@ Table applyWhere(Table table, Where where){
         }
 
     }
+   // std::cout<<"where "<< where.getCondition() << "___________________________\n"<<result.toString();
+
     return result;
 }
 //where sin join
@@ -293,10 +299,17 @@ OperationManager::updateAux(std::string tableName, std::vector<std::string> colu
                             Where whereObject) {
 
     Table workingTable = tables->getTable(tableName);
+
     Table subTable = applyWhere(workingTable, whereObject);
+
     int affectedRegisters = subTable.getTotalRows();
+
     subTable = TableUtils::updateColumns(subTable, values, columns);
+    std::cout<<"subtable \n____________________________________\n"<<subTable.toString()<<"____________________________________\n";
+
     Table tableToSend = TableUtils::updateRows(workingTable, subTable);
+    std::cout<<"tableto \n____________________________________\n"<<tableToSend.toString()<<"____________________________________\n";
+
     for (int i = 0; i < tables->tableList.size(); i++){
         if (tables->tableList[i].getName() == tableToSend.getName()){
             tables->tableList[i] = tableToSend;
@@ -313,6 +326,7 @@ resultCode OperationManager::deleteAux(std::string tableName, Where whereObject)
      Table subTable = applyWhere(workingTable, whereObject);
      Table resultTable = TableUtils::tableDifference(workingTable, subTable);
      int affectedRegisters = subTable.getTotalRows();
+     std::cout << resultTable.toString()<<std::endl;
 
      for (int i = 0; i < tables->tableList.size(); i++){
          if (tables->tableList[i].getName() == resultTable.getName()){

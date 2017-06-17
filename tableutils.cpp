@@ -66,7 +66,7 @@ Table TableUtils::equalTo(Table table, std::string columnName, std::string value
 
 Table lessThanInt(Table table, std::string columnName, std::string value)
 {
-    int valueI;
+    int valueI = std::stoi(value);
     Table result = TableUtils::extractTemplate(table);
 
     int index = result.getColumnIndex(columnName);
@@ -84,7 +84,7 @@ Table lessThanInt(Table table, std::string columnName, std::string value)
 }
 Table lessThanDouble(Table table, std::string columnName, std::string value)
 {
-    double valueD;
+    double valueD = std::stoi(value);
     Table result = TableUtils::extractTemplate(table);
 
     int index = result.getColumnIndex(columnName);
@@ -134,7 +134,7 @@ Table TableUtils::lessThan(Table table, std::string columnName, std::string valu
 
 Table greaterThanInt(Table table, std::string columnName, std::string value)
 {
-    int valueI;
+    int valueI= std::stoi(value);
     Table result = TableUtils::extractTemplate(table);
 
     int index = result.getColumnIndex(columnName);
@@ -152,7 +152,7 @@ Table greaterThanInt(Table table, std::string columnName, std::string value)
 }
 Table greaterThanDouble(Table table, std::string columnName, std::string value)
 {
-    double valueD;
+    double valueD =std::stod(value);
     Table result = TableUtils::extractTemplate(table);
 
     int index = result.getColumnIndex(columnName);
@@ -249,8 +249,8 @@ Table TableUtils::updateRows(Table tableToUpdate, Table newData)
                     Row newrow = row;
                     newrow.setIndex(i);
                     tableToUpdate.updateRow(newrow);
-                    updated=true;
-                    break;
+                    //updated=true;
+                    //break;
                 }
             }
         }
