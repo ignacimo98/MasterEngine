@@ -239,6 +239,7 @@ Table OperationManager::select(json inputJson){
         Join joinObject =  JSONutils::jsonToJoin(inputJson["join"]);
         // result = selectAux(inputJson["from"], inputJson["what"], whereObject, joinObject);
     }
+    std::cout<<"\nSELECT \n____________________________________\n"<<result.toString()<<"____________________________________\n";
     return result;
 }
 resultCode OperationManager::deleteT(json j){
@@ -290,7 +291,7 @@ OperationManager::updateAux(std::string tableName, std::vector<std::string> colu
             break;
         }
     }
-
+    std::cout<<"\nUPDATE \n____________________________________\n"<<workingTable.toString()<<"____________________________________\n";
     return resultCode(1, workingTable.getTotalRows(), "Operacion Exitosa!");
 }
 
@@ -305,10 +306,10 @@ OperationManager::updateAux(std::string tableName, std::vector<std::string> colu
     int affectedRegisters = subTable.getTotalRows();
 
     subTable = TableUtils::updateColumns(subTable, values, columns);
-    std::cout<<"subtable \n____________________________________\n"<<subTable.toString()<<"____________________________________\n";
+    //std::cout<<"subtable \n____________________________________\n"<<subTable.toString()<<"____________________________________\n";
 
     Table tableToSend = TableUtils::updateRows(workingTable, subTable);
-    std::cout<<"tableto \n____________________________________\n"<<tableToSend.toString()<<"____________________________________\n";
+    //std::cout<<"tableto \n____________________________________\n"<<tableToSend.toString()<<"____________________________________\n";
 
     for (int i = 0; i < tables->tableList.size(); i++){
         if (tables->tableList[i].getName() == tableToSend.getName()){
@@ -316,7 +317,8 @@ OperationManager::updateAux(std::string tableName, std::vector<std::string> colu
             break;
         }
     }
-    std::cout<< tableToSend.toString() <<"\n";
+    std::cout<<"\nUPDATE \n____________________________________\n"<<tableToSend.toString()<<"____________________________________\n";
+
     return resultCode(1, affectedRegisters, "Operacion Exitosa!");
 }
 
@@ -324,9 +326,12 @@ resultCode OperationManager::deleteAux(std::string tableName, Where whereObject)
 {
      Table workingTable = tables->getTable(tableName);
      Table subTable = applyWhere(workingTable, whereObject);
+
+
      Table resultTable = TableUtils::tableDifference(workingTable, subTable);
      int affectedRegisters = subTable.getTotalRows();
-     std::cout << resultTable.toString()<<std::endl;
+
+     //std::cout << resultTable.toString()<<std::endl;
 
      for (int i = 0; i < tables->tableList.size(); i++){
          if (tables->tableList[i].getName() == resultTable.getName()){
@@ -334,6 +339,7 @@ resultCode OperationManager::deleteAux(std::string tableName, Where whereObject)
              break;
          }
      }
+     std::cout<<"\nDELETE \n____________________________________\n"<<resultTable.toString()<<"____________________________________\n";
      std::cout<< resultTable.toString() <<"\n";
      return resultCode(1, affectedRegisters, "Operacion Exitosa!");
 
