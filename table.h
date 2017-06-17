@@ -74,13 +74,15 @@ public:
     std::string getPrimaryKey() const;
     void setPrimaryKey(const std::string &value);
     int getPrimaryKeyIndex();
+    void setRows(const std::vector<Row, std::allocator<Row>> &value);
+    std::vector<Row> rows;
 private:
     std::string name;
     std::string primaryKey;
-    std::vector<Row> rows;
     std::vector<ColumnProperties> columnProperties;
     bool checkIfColumnExists(std::string name);
     int getColumnIndex(std::string name);
+
 
 };
 

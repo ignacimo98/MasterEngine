@@ -8,6 +8,8 @@
 
 ConnectionManager::ConnectionManager() {
 
+    tables = new TableManager();
+
     //a message
     char *message = "ECHO Daemon v1.0 \r\n";
 
@@ -200,7 +202,7 @@ ConnectionManager::ConnectionManager() {
                     jsonFile << buffer;
                     jsonFile.close();
                     readJSON();
-                    send(sd , buffer , strlen(buffer) , 0 );
+//                    send(sd , buffer , strlen(buffer) , 0 );
                 }
             }
         }
@@ -225,6 +227,11 @@ void ConnectionManager::readJSON() {
                 {
                     diskSockets[i] = sd;
                     printf("Adding to list of disks as %d\n" , i);
+                    std::string diskString = "{\"command\":\"create_table\",\"name\":\"el nombre\",\"columnTypes\":[0,1,2],\"columnNames\":[\"nombre\",\"id\",\"estatura\"],\"rows\":[]}";
+                    send(sd, diskString.c_str(), diskString.size(), 0);
+                    usleep(500000);
+                    std::string requestString = "{\"command\":\"get_table\", \"name\":\"el nombre\"}";
+                    send(sd, requestString.c_str(), requestString.size(), 0);
 
                     break;
                 }
@@ -284,6 +291,20 @@ void ConnectionManager::readJSON() {
                 break;
             }
         }
+    } else if (j["command"] == "answer"){
+        if (j["found"]){
+            tables->addTable(JSONutils::jsonToTable(j));
+            std::cout << tables->getTable(j["name"]).toString() << std::endl;
+        }
+    } else if (j["command"] == "create_table") {
+        tables->addTable(JSONutils::jsonToTable(j));
+        std::string toDisk = j.dump();
+        for (i = 0; i < maxDisks; i++){
+            if (diskSockets[i] != 0) {
+                send(diskSockets[i],toDisk.c_str(), toDisk.size(), 0);
+            }
+        }
+
     }
 
 
