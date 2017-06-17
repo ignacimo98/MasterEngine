@@ -1,15 +1,10 @@
-//
-// Created by Ignacio Mora on 6/16/17.
-//
+#include "jsonutils.h"
 
-#include "jsonUtils.h"
 
 
 json JSONutils::tableToJson(Table table)
 {
     json result;
-    result["command"] = "answer";
-    result["found"] = true;
     result["name"] =  table.getName();
     json rows;
     for(const Row &row : table.getRows()) {
@@ -30,6 +25,7 @@ json JSONutils::tableToJson(Table table)
     result["columnNames"]= columnNames;
     result["columnTypes"]= columnTypes;
     result["rows"]= rows;
+    result["primaryKey"]= table.getPrimaryKey();
     //std::cout<<"JSON:  " <<result.dump()<<std::endl;
     //json *result2 = new json;
     //result2 = result;
@@ -39,13 +35,13 @@ json JSONutils::tableToJson(Table table)
 Table JSONutils::jsonToTable(json inputJson)
 {
 
-
     Table result;
     result.setName(inputJson["name"]);
+    result.setPrimaryKey(inputJson["primaryKey"]);
 
     for (int i = 0; i < inputJson["columnNames"].size(); i++) {
         result.insertColumn(inputJson["columnNames"][i],inputJson["columnTypes"][i] );
-    }
+   }
     for (const auto &row : inputJson["rows"] ) {
         std::vector<std::string> newRow = row;
         result.insertRow(Row(newRow));

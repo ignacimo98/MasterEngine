@@ -19,7 +19,7 @@
 #include <thread>
 #include "JSON library/json.hpp"
 #include "tableManager.h"
-#include "jsonUtils.h"
+#include "jsonutils.h"
 #include "operationManager.h"
 
 #define TRUE   1
