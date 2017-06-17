@@ -43,6 +43,7 @@ public:
     TableManager* tables;
     OperationManager* operations;
     void sendTable(std::string name);
+    std::vector<std::string> getMetadata();
 
 
 private:

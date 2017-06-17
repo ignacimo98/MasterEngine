@@ -167,6 +167,9 @@ ConnectionManager::ConnectionManager() {
                     //Close the socket and mark as 0 in list for reuse
                     close( sd );
                     allSockets[i] = 0;
+                    if (queryExecutorSocket == sd) {
+                        queryExecutorSocket = 0;
+                    }
                     for (i = 0; i < maxClients; i++)
                     {
                         //if position is empty
@@ -308,6 +311,16 @@ void ConnectionManager::readJSON() {
                 send(diskSockets[i],toDisk.c_str(), toDisk.size(), 0);
             }
         }
+        std::cout << tables->tableList[0].toString() << std::endl;
+        json returnCode;
+        returnCode["command"] = "responseCode";
+        returnCode["code"] = 1;
+        returnCode["affected_entries"] = 0;
+        returnCode["description"] = "Operación exitosa!!!";
+        std::string returnStr = returnCode.dump();
+        std::cout << returnStr << std::endl;
+        send(currentClient,returnStr.c_str(),returnStr.size(),0);
+
 
     } else if (j["command"] == "insert"){
         resultCode code = operations->insert(j);
@@ -324,16 +337,16 @@ void ConnectionManager::readJSON() {
 
         }
         json responseCode;
-        responseCode["command"] = "answer_to_request";
+        responseCode["command"] = "responseCode";
         responseCode["code"] = code.getCodeNumber();
         responseCode["affected_entries"] = code.getNumberOfRegisters();
         responseCode["description"] = code.getCodeDescription();
         std::string responseString = responseCode.dump();
-        send(currentClient,responseString.c_str(), responseCode.size(), 0);
+        send(currentClient,responseString.c_str(), responseString.size(), 0);
 
     } else if (j["command"] == "parse"){
         currentClient = sd;
-        std::string queryString = j.dump();
+        std::string queryString = j["query"];
         send(queryExecutorSocket, queryString.c_str(), queryString.size(), 0);
     } else if (j["command"] == "drop_table"){
         resultCode code = operations->drop(j);
@@ -351,7 +364,7 @@ void ConnectionManager::readJSON() {
         responseCode["affected_entries"] = code.getNumberOfRegisters();
         responseCode["description"] = code.getCodeDescription();
         std::string responseString = responseCode.dump();
-        send(currentClient,responseString.c_str(), responseCode.size(), 0);
+        send(currentClient,responseString.c_str(), responseString.size(), 0);
     }else if (j["command"] == "get_table"){
         currentClient = sd;
         sendTable(j["name"]);
@@ -376,7 +389,14 @@ void ConnectionManager::readJSON() {
         responseCode["affected_entries"] = code.getNumberOfRegisters();
         responseCode["description"] = code.getCodeDescription();
         std::string responseString = responseCode.dump();
-        send(currentClient,responseString.c_str(), responseCode.size(), 0);
+        send(currentClient,responseString.c_str(), responseString.size(), 0);
+    } else if (j["command"] == "select"){
+        Table resultTable = operations->select(j);
+        json result;
+        result["command"] = "table";
+        result["table"] = JSONutils::tableToJson(resultTable);
+        std::string str = result.dump();
+        send(currentClient, str.c_str(), str.size(), 0);
     }
     else if(j["command"] == "delete"){
         resultCode code = operations->deleteT(j);
@@ -408,6 +428,14 @@ void ConnectionManager::readJSON() {
         responseCode["description"] = j["description"];
         std::string responseString = responseCode.dump();
         send(currentClient,responseString.c_str(), responseCode.size(), 0);
+
+    } else if (j["command"] == "getMetadata"){
+        json meta;
+        json k(getMetadata());
+        meta["metadata"] = k;
+        std::string str = meta.dump();
+        std::cout << str << std::endl;
+        send(currentClient, str.c_str(),str.size(),0);
     }
 
 
@@ -445,6 +473,14 @@ bool ConnectionManager::isDisk(int fd) {
             return true;
     }
     return false;
+}
+
+std::vector<std::string> ConnectionManager::getMetadata() {
+    std::vector<std::string> result;
+    for (int i = 0; i < tables->tableList.size(); i++) {
+        result.push_back(JSONutils::tableToJson(tables->tableList[i]).dump());
+    }
+    return result;
 }
 
 
