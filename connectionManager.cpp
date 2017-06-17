@@ -400,6 +400,14 @@ void ConnectionManager::readJSON() {
         responseCode["description"] = code.getCodeDescription();
         std::string responseString = responseCode.dump();
         send(currentClient,responseString.c_str(), responseCode.size(), 0);
+    }else if(j["command"] == "error"){
+        json responseCode;
+        responseCode["command"] = "responseCode";
+        responseCode["code"] = 405;
+        responseCode["affected_entries"] = 0;
+        responseCode["description"] = j["description"];
+        std::string responseString = responseCode.dump();
+        send(currentClient,responseString.c_str(), responseCode.size(), 0);
     }
 
 
