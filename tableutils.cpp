@@ -13,7 +13,7 @@ bool existOnTable(Row row, Table table){
     bool result = false;
     int keyIndex = table.getPrimaryKeyIndex();
     for(const Row &tableRow : table.getRows()){
-        if(tableRow.getContents()[keyIndex]==row.getContents()[keyIndex]){
+        if(tableRow.getContents()[keyIndex] == row.getContents()[keyIndex]){
             result = true;
             break;
         }

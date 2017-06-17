@@ -33,6 +33,8 @@ private:
     Table selectAux(std::string tableName, std::vector<std::string> columns);
     resultCode updateAux(std::string tableName, std::vector<std::string> columns, std::vector<std::string> values);
     resultCode updateAux(std::string tableName, std::vector<std::string> columns, std::vector<std::string> values, Where whereObject);
+    //resultCode deleteAux(std::string tableName, std::vector<std::string> columns, std::vector<std::string> values);
+    resultCode deleteAux(std::string tableName, Where whereObject);
 
 };
 

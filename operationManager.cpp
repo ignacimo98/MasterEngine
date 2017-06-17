@@ -208,6 +208,8 @@ resultCode OperationManager::drop(json j) {
     return resultCode(404, 0, "Tabla no existe");
 }
 
+
+
 Table OperationManager::select(json inputJson){
     Table result;
     //columnas
@@ -232,6 +234,20 @@ Table OperationManager::select(json inputJson){
     }
     return result;
 }
+resultCode OperationManager::deleteT(json j){
+    resultCode result(404,0,"Table not found");
+    if(tables->exists(j["from"])) {
+        if(j["where"] != "") {
+            Where whereObject = JSONutils::jsonToWhere(j["where"]);
+            result = deleteAux(j["from"], whereObject);
+        }
+        else{
+            result = drop(j);
+        }
+    }
+    return result;
+}
+
 
 resultCode OperationManager::update(json j) {
 
@@ -251,21 +267,15 @@ resultCode OperationManager::update(json j) {
 resultCode
 OperationManager::updateAux(std::string tableName, std::vector<std::string> columns, std::vector<std::string> values) {
     Table workingTable = tables->getTable(tableName);
-    std::cout<<" \ncols\n";
     for (int i = 0; i < columns.size(); ++i) {
         std::cout<<" "<<columns[i];
     }
-    std::cout<<" \nvalues\n";
     for (int i = 0; i < values.size(); ++i) {
         std::cout<<" "<<values[i];
     }
-    std::cout<<"\npre\n"<< workingTable.toString()<<"\n";
 
 
     workingTable = TableUtils::updateColumns(workingTable, values, columns);
-
-    std::cout<< "des\n"<<workingTable.toString()<<"\n";
-
 
     for (int i = 0; i < tables->tableList.size(); i++){
         if (tables->tableList[i].getName() == workingTable.getName()){
@@ -292,7 +302,26 @@ OperationManager::updateAux(std::string tableName, std::vector<std::string> colu
             break;
         }
     }
+    std::cout<< tableToSend.toString() <<"\n";
     return resultCode(1, affectedRegisters, "Operacion Exitosa!");
+}
+
+resultCode OperationManager::deleteAux(std::string tableName, Where whereObject)
+{
+     Table workingTable = tables->getTable(tableName);
+     Table subTable = applyWhere(workingTable, whereObject);
+     Table resultTable = TableUtils::tableDifference(workingTable, subTable);
+     int affectedRegisters = subTable.getTotalRows();
+
+     for (int i = 0; i < tables->tableList.size(); i++){
+         if (tables->tableList[i].getName() == resultTable.getName()){
+             tables->tableList[i] = resultTable;
+             break;
+         }
+     }
+     std::cout<< resultTable.toString() <<"\n";
+     return resultCode(1, affectedRegisters, "Operacion Exitosa!");
+
 }
 
 

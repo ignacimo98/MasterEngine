@@ -378,6 +378,29 @@ void ConnectionManager::readJSON() {
         std::string responseString = responseCode.dump();
         send(currentClient,responseString.c_str(), responseCode.size(), 0);
     }
+    else if(j["command"] == "delete"){
+        resultCode code = operations->deleteT(j);
+        if (code.getCodeNumber() == 1){
+            json toDisk = JSONutils::tableToJson(tables->getTable(j["from"]));
+            toDisk["command"] = "delete_table";
+            std::string toDiskStr = toDisk.dump();
+            for (i = 0; i < maxDisks; i++){
+                if (diskSockets[i] != 0) {
+                    send(diskSockets[i],toDiskStr.c_str(), toDiskStr.size(), 0);
+                }
+            }
+        }
+
+        std::cout << tables->getTable(j["from"]).toString() << std::endl;
+
+        json responseCode;
+        responseCode["command"] = "responseCode";
+        responseCode["code"] = code.getCodeNumber();
+        responseCode["affected_entries"] = code.getNumberOfRegisters();
+        responseCode["description"] = code.getCodeDescription();
+        std::string responseString = responseCode.dump();
+        send(currentClient,responseString.c_str(), responseCode.size(), 0);
+    }
 
 
 }
