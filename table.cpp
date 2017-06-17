@@ -196,6 +196,11 @@ int Table::getPrimaryKeyIndex()
     return getColumnIndex(primaryKey);
 }
 
+void Table::setRows(const std::vector<Row> &value)
+{
+    rows = value;
+}
+
 bool Table::checkIfColumnExists(std::string name)
 {
     return getColumnIndex(name) != -1;
