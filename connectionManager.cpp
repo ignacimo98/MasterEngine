@@ -153,7 +153,7 @@ ConnectionManager::ConnectionManager() {
 
             if (FD_ISSET( sd , &readfds))
             {
-                valread = read( sd , buffer, 1024);
+                valread = read( sd , buffer, 1024*10);
                 //Check if it was for closing , and also read the
                 //incoming message
                 if (valread == 0)
@@ -304,6 +304,8 @@ void ConnectionManager::readJSON() {
                 send(diskSockets[i],toDisk.c_str(), toDisk.size(), 0);
             }
         }
+
+    } else if (j["command"] == "insert"){
 
     }
 

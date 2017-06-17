@@ -50,7 +50,7 @@ private:
     int max_sd;
     struct sockaddr_in address;
 
-    char buffer[1025];  //data buffer of 1K
+    char buffer[1024*10];  //data buffer of 10K
 
     //set of socket descriptors
     fd_set readfds;
