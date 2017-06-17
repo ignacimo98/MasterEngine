@@ -21,7 +21,7 @@ bool existOnTable(Row row, Table table){
     return result;
 }
 
-Table TableUtils::OR(Table table1, Table table2)
+Table TableUtils::tableUnion(Table table1, Table table2)
 {
     Table result = extractTemplate(table1);
     int keyIndex = table1.getPrimaryKeyIndex();
@@ -34,7 +34,7 @@ Table TableUtils::OR(Table table1, Table table2)
     return result;
 }
 
-Table TableUtils::AND(Table table1, Table table2)
+Table TableUtils::tableIntersection(Table table1, Table table2)
 {
     Table result = extractTemplate(table1);
     int keyIndex = table1.getPrimaryKeyIndex();
@@ -209,7 +209,7 @@ Table TableUtils::subTable(Table table, std::vector<std::string> columnsNames, s
         result.setRows(table.getRows());
     }
 
-    if(!columnsNames.empty()){
+    if(!(columnsNames.empty() or columnsNames[0]=="*" )){
         for(const ColumnProperties &columnProperty : result.getColumnProperties()){
             bool exists= false;
             for(const std::string &columnName: columnsNames){
@@ -221,6 +221,17 @@ Table TableUtils::subTable(Table table, std::vector<std::string> columnsNames, s
             if(!exists){
                 result.removeColumn(columnProperty.getName());
             }
+        }
+    }
+    return result;
+}
+
+Table TableUtils::tableDifference(Table tableMain, Table tableToRemove)
+{
+    Table result = extractTemplate(tableMain);
+    for(const Row &row:tableToRemove.getRows()){
+        if(!existOnTable(row, tableToRemove)){
+            result.insertRow(row);
         }
     }
     return result;

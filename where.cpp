@@ -1,5 +1,10 @@
 #include "where.h"
 
+Comparator::Comparator()
+{
+
+}
+
 Comparator::Comparator(std::string tableName, std::string columName, std::string operatorType, std::string value) {
     this->tableName = tableName;
     this->columnName = columName;
@@ -47,6 +52,11 @@ void Comparator::setTableName(const std::string &value)
     tableName = value;
 }
 
+
+Where::Where()
+{
+
+}
 
 Where::Where(std::string condition, std::vector<Comparator> comparators)
 {

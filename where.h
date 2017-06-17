@@ -10,6 +10,7 @@
 
 class Comparator{
 public:
+    Comparator();
     Comparator(std::string tableName, std::string columName, std::string operatorType, std::string value);
     std::string getValue() const;
     void setValue(const std::string &newValue);
@@ -33,6 +34,7 @@ private:
 
 class Where{
 public:
+    Where();
     Where(std::string condition, std::vector<Comparator> comparators);
     std::string getCondition() const;
     void setCondition(const std::string &value);

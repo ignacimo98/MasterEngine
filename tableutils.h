@@ -3,8 +3,10 @@
 #include "table.h"
 
 namespace TableUtils {
-Table OR(Table table1, Table table2);
-Table AND(Table table1, Table table2);
+Table tableUnion(Table table1, Table table2);
+Table tableIntersection(Table table1, Table table2);
+Table tableDifference(Table tableMain, Table tableToRemove);
+
 Table equalTo(Table table, std::string columnName, std::string value);
 Table lessThan(Table table, std::string columnName, std::string value);
 Table greaterThan(Table table, std::string columnName, std::string value);

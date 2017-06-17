@@ -82,7 +82,7 @@ Table JSONutils::jsonToTable(json inputJson)
  */
 
 
-Where JSONutils::whereToJoin(json inputJson)
+Where JSONutils::jsonToWhere(json inputJson)
 {
     Where result;
     result.setCondition(inputJson["cmd"]);

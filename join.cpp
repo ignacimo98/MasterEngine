@@ -1,6 +1,11 @@
 #include "join.h"
 
 
+Join::Join()
+{
+
+}
+
 Join::Join(std::string externalTable, std::string externalColumn, std::string internalColumn) {
     this->externalTable = externalTable;
     this->externalColumn = externalColumn;

@@ -14,17 +14,25 @@ Table OperationManager::selectAux(std::string tableName, std::vector<std::string
 
 
 }
-
 /*
 {
+    "command": "execute",
     "type": "select",
     "what": ["id ", "cedula", "*"],
     "from": "estudiantes",
     "where": {
-        "table": "estudiantes",
-        "column": "id",
-        "operator": "=",
-        "value": 5
+        "cmd": "AND",
+        "comparators": [{
+            "table": "estudiantes",
+            "column": "id",
+            "operator": "=",
+            "value": 5
+        }, {
+            "table": "estudiantes",
+            "column": "cedula",
+            "operator": "=",
+            "value": 2000222
+        }]
     },
     "join": {
         "externalTable": "cursos",
@@ -62,7 +70,7 @@ Table applyWhere(Table table, Where where){
         result = TableUtils::extractTemplate(table);
         for(const Comparator &comparator : where.getComparators()){
             Table subResult = applyComparator(table, comparator);
-            result = TableUtils::OR(result, subResult);
+            result = TableUtils::tableUnion(result, subResult);
         }
     }
     else{
@@ -81,13 +89,23 @@ Table OperationManager::selectAux(std::string tableName, std::vector<std::string
     //whereObject.
     return result;
 }
+
+//join sin where
 Table OperationManager::selectAux(std::string tableName, std::vector<std::string> columns, Join joinObject){
+
+
 }
 //columnas
 Table OperationManager::selectAux(std::string tableName, std::vector<std::string> columns){
     Table table = tables->getTable(tableName);
     Table result = TableUtils::subTable(table, columns);
     return result;
+    /*if(columns.size()>0 && columns[0]=="*"){
+        result = table;
+    }
+    else{
+    Table result = TableUtils::subTable(table, columns);
+    }*/
 }
 
 
@@ -112,19 +130,19 @@ Table OperationManager::select(json inputJson){
     }
     //join sin where
     else if(inputJson["where"] == "" && inputJson["join"] != "") {
-        //Join joinObject(json["join"]);
-        // result = selectAux(json["from"], json["what"], joinObject);
+        Join joinObject =  JSONutils::jsonToJoin(inputJson["join"]);
+        result = selectAux(inputJson["from"], inputJson["what"], joinObject);
     }
     //where sin join
     else if(inputJson["where"] != "" && inputJson["join"] == ""){
-        Where whereObject(inputJson["where"]);
+        Where whereObject = JSONutils::jsonToWhere(inputJson["where"]);
         result = selectAux(inputJson["from"], inputJson["what"], whereObject);
     }
     //where con join
     else{
-        //Where whereObject(json["where"]);
-        //Join joinObject(json["join"]);
-        // result = selectAux(json["from"], json["what"], whereObject, joinObject);
+        Where whereObject = JSONutils::jsonToWhere(inputJson["where"]);
+        Join joinObject =  JSONutils::jsonToJoin(inputJson["join"]);
+        // result = selectAux(inputJson["from"], inputJson["what"], whereObject, joinObject);
     }
     return result;
 }
