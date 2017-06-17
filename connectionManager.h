@@ -42,6 +42,7 @@ public:
     void insert(std::string name, std::vector<std::string> column);
     TableManager* tables;
     OperationManager* operations;
+    void sendTable(std::string name);
 
 
 private:
@@ -50,7 +51,7 @@ private:
     int master_socket , addrlen , new_socket , allSockets[45] ,
             maxSockets = 45 , activity, i , valread , sd, counter = 0,
             diskSockets[15], maxDisks = 15, queryExecutorSocket = 0,
-            clientSockets[30], maxClients = 30;
+            clientSockets[30], maxClients = 30, currentClient = 0;
     int max_sd;
     struct sockaddr_in address;
 

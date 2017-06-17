@@ -35,3 +35,24 @@ bool TableManager::exists(std::string name) {
     return false;
 }
 
+int TableManager::deleteTable(std::string name) {
+    int rowsAffected = 0;
+    if (exists(name)){
+        int i;
+        for(i = 0; i < tableList.size(); i++){
+            if (tableList[i].getName() == name){
+                break;
+            }
+        }
+        rowsAffected = tableList[i].getTotalRows();
+        tableList.erase(tableList.begin() + i);
+    }
+    return rowsAffected;
+}
+
+void TableManager::updateRow(std::string name, std::vector<std::string> row) {
+    getTable(name).insertRow(row);
+}
+
+
+

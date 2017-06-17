@@ -16,9 +16,12 @@ public:
     Table getTable(std::string name);
     bool exists(std::string name);
     bool addTable(Table table);
+    int deleteTable(std::string name);
+    void updateRow(std::string name, std::vector<std::string> row);
+    std::vector<Table> tableList;
 
 private:
-    std::vector<Table> tableList;
+
 
 };
 

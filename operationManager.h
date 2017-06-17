@@ -20,9 +20,9 @@ public:
     OperationManager(TableManager* tableManager);
     Table select(json inputJson);
     resultCode create();
-    resultCode update();
-    resultCode drop();
-    resultCode deleteT();
+    resultCode update(json j);
+    resultCode drop(json j);
+    resultCode deleteT(json j);
     resultCode insert(json j);
     resultCode createIndex();
     TableManager* tables;
@@ -31,6 +31,8 @@ private:
     Table selectAux(std::string tableName, std::vector<std::string> columns, Where whereObject);
     Table selectAux(std::string tableName, std::vector<std::string> columns, Join joinObject);
     Table selectAux(std::string tableName, std::vector<std::string> columns);
+    resultCode updateAux(std::string tableName, std::vector<std::string> columns, std::vector<std::string> values);
+    resultCode updateAux(std::string tableName, std::vector<std::string> columns, std::vector<std::string> values, Where whereObject);
 
 };
 

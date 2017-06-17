@@ -227,11 +227,11 @@ void ConnectionManager::readJSON() {
                 {
                     diskSockets[i] = sd;
                     printf("Adding to list of disks as %d\n" , i);
-                    std::string diskString = "{\"command\":\"create_table\",\"name\":\"el nombre\",\"columnTypes\":[0,1,2],\"columnNames\":[\"nombre\",\"id\",\"estatura\"],\"rows\":[]}";
-                    send(sd, diskString.c_str(), diskString.size(), 0);
-                    usleep(500000);
-                    std::string requestString = "{\"command\":\"get_table\", \"name\":\"el nombre\"}";
-                    send(sd, requestString.c_str(), requestString.size(), 0);
+//                    std::string diskString = "{\"command\":\"create_table\",\"name\":\"el nombre\",\"columnTypes\":[0,1,2],\"columnNames\":[\"nombre\",\"id\",\"estatura\"],\"rows\":[]}";
+//                    send(sd, diskString.c_str(), diskString.size(), 0);
+//                    usleep(500000);
+//                    std::string requestString = "{\"command\":\"get_table\", \"name\":\"el nombre\"}";
+//                    send(sd, requestString.c_str(), requestString.size(), 0);
 
                     break;
                 }
@@ -269,6 +269,9 @@ void ConnectionManager::readJSON() {
         //Close the socket and mark as 0 in list for reuse
         close( sd );
         allSockets[i] = 0;
+        if (queryExecutorSocket == sd) {
+            queryExecutorSocket = 0;
+        }
         for (i = 0; i < maxClients; i++)
         {
             //if position is empty
@@ -292,7 +295,7 @@ void ConnectionManager::readJSON() {
             }
         }
 
-    } else if (j["command"] == "answer"){
+    } else if (j["command"] == "answer_from_diskNode"){
         if (j["found"]){
             tables->addTable(JSONutils::jsonToTable(j));
             std::cout << tables->getTable(j["name"]).toString() << std::endl;
@@ -307,13 +310,95 @@ void ConnectionManager::readJSON() {
         }
 
     } else if (j["command"] == "insert"){
+        resultCode code = operations->insert(j);
+        if(code.getNumberOfRegisters()){
+            json j1 = JSONutils::tableToJson(tables->getTable(j["name"]));
+            j1["command"] = "update_table";
+            std::string toDisk = j1.dump();
+            for (i = 0; i < maxDisks; i++){
+                if (diskSockets[i] != 0) {
+                    send(diskSockets[i],toDisk.c_str(), toDisk.size(), 0);
+                }
+            }
+            std::cout << tables->getTable(j["name"]).toString() << std::endl;
 
-        operations->insert(j);
+        }
+        json responseCode;
+        responseCode["command"] = "answer_to_request";
+        responseCode["code"] = code.getCodeNumber();
+        responseCode["affected_entries"] = code.getNumberOfRegisters();
+        responseCode["description"] = code.getCodeDescription();
+        std::string responseString = responseCode.dump();
+        send(currentClient,responseString.c_str(), responseCode.size(), 0);
 
+    } else if (j["command"] == "parse"){
+        currentClient = sd;
+        std::string queryString = j.dump();
+        send(queryExecutorSocket, queryString.c_str(), queryString.size(), 0);
+    } else if (j["command"] == "drop_table"){
+        resultCode code = operations->drop(j);
+        if (code.getCodeNumber() == 1){
+            std::string toDisk = JSONutils::tableToJson(tables->getTable(j["name"])).dump();
+            for (i = 0; i < maxDisks; i++){
+                if (diskSockets[i] != 0) {
+                    send(diskSockets[i],toDisk.c_str(), toDisk.size(), 0);
+                }
+            }
+        }
+        json responseCode;
+        responseCode["command"] = "answer_to_request";
+        responseCode["code"] = code.getCodeNumber();
+        responseCode["affected_entries"] = code.getNumberOfRegisters();
+        responseCode["description"] = code.getCodeDescription();
+        std::string responseString = responseCode.dump();
+        send(currentClient,responseString.c_str(), responseCode.size(), 0);
+    }else if (j["command"] == "get_table"){
+        currentClient = sd;
+        sendTable(j["name"]);
+    }else if (j["command"] == "update"){
+        resultCode code = operations->update(j);
+        if (code.getCodeNumber() == 1){
+            json toDisk = JSONutils::tableToJson(tables->getTable(j["from"]));
+            toDisk["command"] = "update_table";
+            std::string toDiskStr = toDisk.dump();
+            for (i = 0; i < maxDisks; i++){
+                if (diskSockets[i] != 0) {
+                    send(diskSockets[i],toDiskStr.c_str(), toDiskStr.size(), 0);
+                }
+            }
+        }
+
+        std::cout << tables->getTable(j["from"]).toString() << std::endl;
+
+        json responseCode;
+        responseCode["command"] = "responseCode";
+        responseCode["code"] = code.getCodeNumber();
+        responseCode["affected_entries"] = code.getNumberOfRegisters();
+        responseCode["description"] = code.getCodeDescription();
+        std::string responseString = responseCode.dump();
+        send(currentClient,responseString.c_str(), responseCode.size(), 0);
     }
 
 
 }
+void ConnectionManager::sendTable(std::string name) {
+    json answer;
+    json command;
+    command["command"] = "table";
+    if (!tables->exists(name)){
+        answer["command"] = "answer";
+        answer["found"] = false;
+    } else{
+        answer = JSONutils::tableToJson(tables->getTable(name));
+    }
+    command["table"] = answer;
+    std::string commandString = command.dump();
+    std::cout << commandString << std::endl;
+    send(currentClient, commandString.c_str(), commandString.size(), 0);
+
+
+}
+
 
 bool ConnectionManager::isClient(int fd) {
     for (i = 0; i < maxClients; i++){

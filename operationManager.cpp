@@ -5,6 +5,38 @@
 #include "where.h"
 #include "join.h"
 
+bool isInteger(const std::string & s)
+{
+    if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false ;
+
+    char * p ;
+    strtol(s.c_str(), &p, 10) ;
+
+    return (*p == 0) ;
+}
+bool isDouble(const std::string& s)
+{
+    int nb_point=0;
+    for (int i=0; i<s.length();i++)
+    {
+        if (s[i]=='.')
+        {
+            nb_point++;
+        }
+        else if (!isdigit(s[i])) {
+            return false;
+        }
+    }
+    if (nb_point==1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 OperationManager::OperationManager(TableManager *tableManager) {
     this->tables = tableManager;
 
@@ -112,16 +144,68 @@ Table OperationManager::selectAux(std::string tableName, std::vector<std::string
 
 
 resultCode OperationManager::insert(json j){
+    Table workingTable;
     if(tables->exists(j["name"])){
+        workingTable = tables->getTable(j["name"]);
         std::vector<std::string> toAdd;
-        for (int i = 0; i < tables->getTable(j["name"]).getTotalColumns(); i++){
+        for (int i = 0; i < workingTable.getTotalColumns(); i++){
+            bool found = false;
             for (int k = 0; k < j["column_names"].size(); k++){
-                if (tables->getTable(j["name"]).getColumnProperties()[i].getName() == j["column_names"][k]){
+                if (workingTable.getColumnProperties()[i].getName() == j["column_names"][k]){
+                    found = true;
+                    if (workingTable.getColumnProperties()[i].getType() == 0){
+                        toAdd.push_back(j["values"][k]);
+                        break;
+                    }
+                    else if (workingTable.getColumnProperties()[i].getType() == 1){
+                        if (isInteger(j["values"][k])){
+                            toAdd.push_back(j["values"][k]);
+                            break;
+                        }
+                        else{
+                            return resultCode(69,0,"Hay un valor inválido!");
+                        }
+                    }
+                    else if (workingTable.getColumnProperties()[i].getType() == 2){
+                        if (isDouble(j["values"][k])){
+                            toAdd.push_back(j["values"][k]);
+                            break;
+                        }
+                        else{
+                            return resultCode(69,0,"Hay un valor inválido!");
+                        }
+                    }
                 }
             }
+            if (!found){
+                toAdd.push_back("");
+            }
         }
+
+        workingTable.insertRow(toAdd);
+
+        for (int i = 0; i < tables->tableList.size(); i++){
+            if (tables->tableList[i].getName() == workingTable.getName()){
+                tables->tableList[i] = workingTable;
+                break;
+            }
+        }
+
+        return resultCode(1,1,"Operación exitosa!");
     }
-    return resultCode(0,0,"");
+    return resultCode(404,0,"Table not found!!!");
+
+
+}
+
+
+
+resultCode OperationManager::drop(json j) {
+    int affectedRegisters = tables->deleteTable(j["name"]);
+    if (affectedRegisters > 1){
+        return resultCode(1, affectedRegisters, "Operación exitosa!");
+    }
+    return resultCode(404, 0, "Tabla no existe");
 }
 
 Table OperationManager::select(json inputJson){
@@ -148,6 +232,57 @@ Table OperationManager::select(json inputJson){
     }
     return result;
 }
+
+resultCode OperationManager::update(json j) {
+
+    resultCode result(404,0,"Table not found");
+    if(tables->exists(j["from"])) {
+        if(j["where"] != "") {
+            Where whereObject = JSONutils::jsonToWhere(j["where"]);
+            result = updateAux(j["from"], j["columns"], j["values"], whereObject);
+        }
+        else{
+            result = updateAux(j["from"], j["columns"], j["values"]);
+        }
+    }
+    return result;
+}
+
+resultCode
+OperationManager::updateAux(std::string tableName, std::vector<std::string> columns, std::vector<std::string> values) {
+    Table workingTable = tables->getTable(tableName);
+    workingTable = TableUtils::updateColumns(workingTable, values, columns);
+
+
+    for (int i = 0; i < tables->tableList.size(); i++){
+        if (tables->tableList[i].getName() == workingTable.getName()){
+            tables->tableList[i] = workingTable;
+            break;
+        }
+    }
+
+    return resultCode(1, workingTable.getTotalRows(), "Operacion Exitosa!");
+}
+
+resultCode
+OperationManager::updateAux(std::string tableName, std::vector<std::string> columns, std::vector<std::string> values,
+                            Where whereObject) {
+
+    Table workingTable = tables->getTable(tableName);
+    Table subTable = applyWhere(workingTable, whereObject);
+    int affectedRegisters = subTable.getTotalRows();
+    subTable = TableUtils::updateColumns(subTable, values, columns);
+    Table tableToSend = TableUtils::updateRows(workingTable, subTable);
+    for (int i = 0; i < tables->tableList.size(); i++){
+        if (tables->tableList[i].getName() == tableToSend.getName()){
+            tables->tableList[i] = tableToSend;
+            break;
+        }
+    }
+    return resultCode(1, affectedRegisters, "Operacion Exitosa!");
+}
+
+
 
 
 
