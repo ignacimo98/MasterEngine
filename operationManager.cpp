@@ -10,19 +10,19 @@ OperationManager::OperationManager(TableManager *tableManager) {
 
 }
 
-Table selectAux(std::string tableName, std::vector<std::string> columns, Where whereObject, Join joinObject){
+Table OperationManager::selectAux(std::string tableName, std::vector<std::string> columns, Where whereObject, Join joinObject){
 
 }
 
-Table selectAux(std::string tableName, std::vector<std::string> columns, Where whereObject){
+Table OperationManager::selectAux(std::string tableName, std::vector<std::string> columns, Where whereObject){
 
 }
 
-Table selectAux(std::string tableName, std::vector<std::string> columns, Join joinObject){
+Table OperationManager::selectAux(std::string tableName, std::vector<std::string> columns, Join joinObject){
 
 }
 
-Table selectAux(std::string tableName, std::vector<std::string> columns){
+Table OperationManager::selectAux(std::string tableName, std::vector<std::string> columns){
 
 }
 
