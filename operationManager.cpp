@@ -67,7 +67,7 @@ Table applyWhere(Table table, Where where){
     }
     else{
         if(where.getComparators().size()>0){
-            result = applyComparator(table, comparator);
+            result = applyComparator(table, where.getComparators()[0]);
         }
 
     }
@@ -104,21 +104,21 @@ resultCode OperationManager::insert(json j){
     return resultCode(0,0,"");
 }
 
-Table OperationManager::select(json json){
+Table OperationManager::select(json inputJson){
     Table result;
     //columnas
-    if(json["where"] == "" && json["join"] == ""){
-        result = selectAux(json["from"], json["what"]);
+    if(inputJson["where"] == "" && inputJson["join"] == ""){
+        result = selectAux(inputJson["from"], inputJson["what"]);
     }
     //join sin where
-    else if(json["where"] == "" && json["join"] != "") {
+    else if(inputJson["where"] == "" && inputJson["join"] != "") {
         //Join joinObject(json["join"]);
         // result = selectAux(json["from"], json["what"], joinObject);
     }
     //where sin join
-    else if(json["where"] != "" && json["join"] == ""){
-        Where whereObject(json["where"]);
-        result = selectAux(json["from"], json["what"], whereObject);
+    else if(inputJson["where"] != "" && inputJson["join"] == ""){
+        Where whereObject(inputJson["where"]);
+        result = selectAux(inputJson["from"], inputJson["what"], whereObject);
     }
     //where con join
     else{

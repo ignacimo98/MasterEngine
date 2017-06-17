@@ -1,7 +1,7 @@
 #include "tableutils.h"
 
-Table extractTemplate(Table table){
-    //Table TableUtils::extractTemplate(Table table){
+//Table extractTemplate(Table table){
+Table TableUtils::extractTemplate(Table table){
     Table result;
     result.setName(table.getName());
     result.setPrimaryKey(table.getPrimaryKey());
@@ -67,7 +67,7 @@ Table TableUtils::equalTo(Table table, std::string columnName, std::string value
 Table lessThanInt(Table table, std::string columnName, std::string value)
 {
     int valueI;
-    Table result = extractTemplate(table);
+    Table result = TableUtils::extractTemplate(table);
 
     int index = result.getColumnIndex(columnName);
     if(index != -1){
@@ -85,7 +85,7 @@ Table lessThanInt(Table table, std::string columnName, std::string value)
 Table lessThanDouble(Table table, std::string columnName, std::string value)
 {
     double valueD;
-    Table result = extractTemplate(table);
+    Table result = TableUtils::extractTemplate(table);
 
     int index = result.getColumnIndex(columnName);
     if(index != -1){
@@ -99,7 +99,7 @@ Table lessThanDouble(Table table, std::string columnName, std::string value)
 }
 Table lessThanString(Table table, std::string columnName, std::string value)
 {
-    Table result = extractTemplate(table);
+    Table result = TableUtils::extractTemplate(table);
 
     int index = result.getColumnIndex(columnName);
     if(index != -1){
@@ -135,7 +135,7 @@ Table TableUtils::lessThan(Table table, std::string columnName, std::string valu
 Table greaterThanInt(Table table, std::string columnName, std::string value)
 {
     int valueI;
-    Table result = extractTemplate(table);
+    Table result = TableUtils::extractTemplate(table);
 
     int index = result.getColumnIndex(columnName);
     if(index != -1){
@@ -153,7 +153,7 @@ Table greaterThanInt(Table table, std::string columnName, std::string value)
 Table greaterThanDouble(Table table, std::string columnName, std::string value)
 {
     double valueD;
-    Table result = extractTemplate(table);
+    Table result = TableUtils::extractTemplate(table);
 
     int index = result.getColumnIndex(columnName);
     if(index != -1){
@@ -167,7 +167,7 @@ Table greaterThanDouble(Table table, std::string columnName, std::string value)
 }
 Table greaterThanString(Table table, std::string columnName, std::string value)
 {
-    Table result = extractTemplate(table);
+    Table result = TableUtils::extractTemplate(table);
 
     int index = result.getColumnIndex(columnName);
     if(index != -1){

@@ -18,7 +18,7 @@ using json = nlohmann::json;
 class OperationManager{
 public:
     OperationManager(TableManager* tableManager);
-    Table select(json json);
+    Table select(json inputJson);
     resultCode create();
     resultCode update();
     resultCode drop();
