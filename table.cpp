@@ -224,9 +224,12 @@ void Table::setRows(const std::vector<Row> &value)
 
 bool Table::updateColumn(std::string name, std::string value)
 {
+
     bool result = false;
     int index = getColumnIndex(name);
-    if(index == -1){
+
+    if(index != -1){
+        std::cout <<"index      "<<index<<"\n";
         updateColumn(index, value);
         result = true;
     }
@@ -235,8 +238,13 @@ bool Table::updateColumn(std::string name, std::string value)
 
 bool Table::updateColumn(int index, std::string value)
 {
+    std::cout <<"index   adentro   "<<index<<"\n";
+    std::cout <<"row size"<<rows.size();
     for (int i = 0; i < rows.size(); ++i) {
-        rows[i].contents[index]=value;
+        std::cout<<"col"<<  rows[i].contents[index]<<"val"<<value<<"\n";
+        rows[i].contents[index] = value;
+        std::cout<<"col des"<<  rows[i].contents[index]<<"\n";
+
     }
     return true;
 }

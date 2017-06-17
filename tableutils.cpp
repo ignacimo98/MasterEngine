@@ -260,6 +260,7 @@ Table TableUtils::updateRows(Table tableToUpdate, Table newData)
 
 Table TableUtils::updateColumns(Table table, std::vector<std::string> contents, std::vector<std::string> columnsNames)
 {
+    //std::cout<<"cont size"<<contents.size();
     for (int i = 0; i < contents.size(); ++i) {
         table.updateColumn(columnsNames[i],contents[i]);
     }

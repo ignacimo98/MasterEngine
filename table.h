@@ -1,6 +1,6 @@
 #ifndef TABLE_H
 #define TABLE_H
-
+#include "iostream"
 #include <vector>
 #include <string>
 //#include "row.h"

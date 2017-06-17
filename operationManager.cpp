@@ -251,7 +251,20 @@ resultCode OperationManager::update(json j) {
 resultCode
 OperationManager::updateAux(std::string tableName, std::vector<std::string> columns, std::vector<std::string> values) {
     Table workingTable = tables->getTable(tableName);
+    std::cout<<" \ncols\n";
+    for (int i = 0; i < columns.size(); ++i) {
+        std::cout<<" "<<columns[i];
+    }
+    std::cout<<" \nvalues\n";
+    for (int i = 0; i < values.size(); ++i) {
+        std::cout<<" "<<values[i];
+    }
+    std::cout<<"\npre\n"<< workingTable.toString()<<"\n";
+
+
     workingTable = TableUtils::updateColumns(workingTable, values, columns);
+
+    std::cout<< "des\n"<<workingTable.toString()<<"\n";
 
 
     for (int i = 0; i < tables->tableList.size(); i++){
