@@ -57,6 +57,7 @@ public:
     bool insertRow(std::vector<std::string> dataRow);
     //bool removeColumn(std::string name);
     bool removeColumn(int index);
+    bool removeColumn(std::string name);
     bool removeRow(int index);
     Row getRow(int index) const;
     std::vector<Row> getRows(std::vector<int> rowsIndexes) const;
@@ -74,14 +75,15 @@ public:
     std::string getPrimaryKey() const;
     void setPrimaryKey(const std::string &value);
     int getPrimaryKeyIndex();
-    void setRows(const std::vector<Row, std::allocator<Row>> &value);
-    std::vector<Row> rows;
+    void setRows(const std::vector<Row> &value);
+    int getColumnIndex(std::string name);
+    //void setRows(const std::vector<Row, std::allocator<Row>> &value);
 private:
+    std::vector<Row> rows;
     std::string name;
     std::string primaryKey;
     std::vector<ColumnProperties> columnProperties;
     bool checkIfColumnExists(std::string name);
-    int getColumnIndex(std::string name);
 
 
 };

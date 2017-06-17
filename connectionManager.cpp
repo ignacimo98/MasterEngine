@@ -11,7 +11,6 @@ ConnectionManager::ConnectionManager() {
     tables = new TableManager();
 
     //a message
-    char *message = "ECHO Daemon v1.0 \r\n";
 
     //initialise all allSockets[] to 0 so not checked
     for (i = 0; i < maxSockets; i++)
@@ -291,6 +290,7 @@ void ConnectionManager::readJSON() {
                 break;
             }
         }
+
     } else if (j["command"] == "answer"){
         if (j["found"]){
             tables->addTable(JSONutils::jsonToTable(j));

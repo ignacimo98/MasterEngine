@@ -58,6 +58,10 @@ bool Table::removeColumn(int index)
     return result;
 }
 
+bool Table::removeColumn(std::string name) {
+    return removeColumn(getColumnIndex(name));
+}
+
 bool Table::removeRow(int index)
 {
     int result = false;
@@ -194,11 +198,6 @@ void Table::setPrimaryKey(const std::string &value)
 int Table::getPrimaryKeyIndex()
 {
     return getColumnIndex(primaryKey);
-}
-
-void Table::setRows(const std::vector<Row> &value)
-{
-    rows = value;
 }
 
 bool Table::checkIfColumnExists(std::string name)

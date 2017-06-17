@@ -5,7 +5,7 @@
 #ifndef MASTERENGINE_JSONUTILS_H
 #define MASTERENGINE_JSONUTILS_H
 
-#include "JSON Library/json.hpp"
+#include "JSON library/json.hpp"
 #include "table.h"
 using json = nlohmann::json;
 
